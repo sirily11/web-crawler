@@ -40,11 +40,13 @@ def parse_website(link: str):
 
 
 if __name__ == '__main__':
+    number_of_threads = 3
+    parse_website("https://www.cnn.com")
     threads = []
     while Website.objects.filter(has_visited=False).exists():
         start_time = time()
         print(f'# of websites: {Website.objects.count()}')
-        next_websites: [Website] = Website.objects.filter(has_visited=False)[:3]
+        next_websites: [Website] = Website.objects.filter(has_visited=False)[:number_of_threads]
         for w in next_websites:
             t = threading.Thread(target=parse_website, args=(w.link,))
             threads.append(t)
