@@ -19,7 +19,8 @@ def parse_website(link: str):
 
         title = title.text if title else ''
         body = body.text if body else ''
-
+        lock = threading.Lock()
+        lock.acquire()
         if not Website.objects.filter(link=link).exists():
             website = Website(title=title, content=body, link=link)
         else:
@@ -33,6 +34,7 @@ def parse_website(link: str):
         for l in links:
             if not Website.objects.filter(link=l).exists():
                 Website.objects.create(link=l)
+        lock.release()
     except Exception as e:
         print(e)
         website = Website.objects.filter(link=link)
